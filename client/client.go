@@ -42,12 +42,12 @@ const clientTimeout = 20
 
 // SendEmail sends an email and returns the message ID and any error
 func (c *Client) SendEmail(e *Email) (messageID string, err error) {
-	postBody, err := json.Marshal(e)
+	post_body, err := json.Marshal(e)
 	if err != nil {
 		return "", fmt.Errorf("email failed JSON marshalling: %s", err)
 	}
 
-	bodyBuffer := bytes.NewBuffer(postBody)
+	bodyBuffer := bytes.NewBuffer(post_body)
 
 	req, err := http.NewRequest("POST", c.Endpoint+sendEndpoint+"?api-version="+c.APIVersion, bodyBuffer)
 	if err != nil {
