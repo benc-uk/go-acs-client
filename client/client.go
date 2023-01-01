@@ -44,20 +44,20 @@ const clientTimeout = 20
 func (c *Client) SendEmail(e *Email) (messageID string, err error) {
 	postBody, err := json.Marshal(e)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("email failed JSON marshalling: %s", err)
 	}
 
 	bodyBuffer := bytes.NewBuffer(postBody)
 
 	req, err := http.NewRequest("POST", c.Endpoint+sendEndpoint+"?api-version="+c.APIVersion, bodyBuffer)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error creating API request: %s", err)
 	}
 
 	// Sign the request using the ACS access key and HMAC-SHA256
 	err = auth.SignRequestHMAC(c.AccessKey, req)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error signing API request: %s", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -72,7 +72,7 @@ func (c *Client) SendEmail(e *Email) (messageID string, err error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error sending API request: %s", err)
 	}
 	defer resp.Body.Close()
 

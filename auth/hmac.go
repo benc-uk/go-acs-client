@@ -42,7 +42,7 @@ func SignRequestHMAC(secret string, req *http.Request) error {
 
 	key, err := base64.StdEncoding.DecodeString(secret)
 	if err != nil {
-		return err
+		return fmt.Errorf("error decoding secret: %s", err)
 	}
 
 	timestamp := time.Now().UTC().Format(http.TimeFormat)
