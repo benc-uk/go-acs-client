@@ -12,6 +12,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Run linting check
-      run: make lint
+    
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v3.3.1
