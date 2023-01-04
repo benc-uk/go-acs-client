@@ -1,7 +1,7 @@
 package client
 
 // ==============================================================================
-// Test suite for the client SDK
+// Test suite for the client SDK and email
 // Create .env file with the following:
 //  ACS_ENDPOINT=https://<your-resource-name>.communication.azure.com
 //  ACS_ACCESS_KEY=<your-acs-access-key>
@@ -16,7 +16,7 @@ import (
 	"strings"
 	"testing"
 
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/joho/godotenv"
 )
 
 var toAddress string
@@ -25,15 +25,25 @@ var fromAddress string
 var endpoint string
 var accessKey string
 
+var fromNumber string
+var toNumber string
+
 const subject = "Test email via Azure Communication Services"
 const emailBody = "<h1>Hello!</h1>This email was sent using Go and the Azure Communication Services REST API"
 
 func TestMain(m *testing.M) {
+	_ = godotenv.Load("./.env")
+	_ = godotenv.Load("../.env")
+
 	endpoint = os.Getenv("ACS_ENDPOINT")
 	accessKey = os.Getenv("ACS_ACCESS_KEY")
+
 	toAddress = os.Getenv("TO_ADDRESS")
 	fromAddress = os.Getenv("FROM_ADDRESS")
 	ccAddress = os.Getenv("CC_ADDRESS")
+
+	fromNumber = os.Getenv("FROM_NUMBER")
+	toNumber = os.Getenv("TO_NUMBER")
 
 	if endpoint == "" || accessKey == "" {
 		log.Fatal("Please set ACS_ENDPOINT and ACS_ACCESS_KEY")
@@ -41,6 +51,10 @@ func TestMain(m *testing.M) {
 
 	if toAddress == "" || fromAddress == "" || ccAddress == "" {
 		log.Fatal("Please set TO_ADDRESS, FROM_ADDRESS & CC_ADDRESS")
+	}
+
+	if fromNumber == "" || toNumber == "" {
+		log.Fatal("Please set FROM_NUMBER, TO_NUMBER")
 	}
 
 	m.Run()
@@ -65,7 +79,7 @@ func TestSendStatus(t *testing.T) {
 		t.Error(err)
 	}
 
-	status, err := client.GetStatus(id)
+	status, err := client.GetEmailStatus(id)
 	if err != nil {
 		t.Error(err)
 	}

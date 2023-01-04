@@ -12,5 +12,5 @@ lint-fix: ## 🧙 Lint & format, fixes errors and modifies code
 	golangci-lint run --modules-download-mode=mod --timeout=4m --fix ./...
 
 test:  ## 🎯 Run integration tests
-	@echo -e "WARNING: This will run integration tests\nThis will send several real emails!"
-	go test -v ./...
+	@echo -e "WARNING: This will run integration tests\nThis will send several real emails and SMS!"
+	go test -v ./client

@@ -1,13 +1,14 @@
 package client
 
-// Types for the ACS Email API
+// Types for the ACS APIs
 // See: https://learn.microsoft.com/en-us/rest/api/communication/email/send?tabs=HTTP
+// And: https://learn.microsoft.com/en-us/rest/api/communication/sms/send?tabs=HTTP
 
 const ImportanceLow = "low"
 const ImportanceNormal = "normal"
 const ImportanceHigh = "high"
 
-// ==== Request types ====
+// ==== Email Request types ====
 
 // Email is the main request type
 type Email struct {
@@ -54,7 +55,27 @@ type Attachment struct {
 	Name           string `json:"name"`
 }
 
-// ==== Error types ====
+// ==== SMS Request Types ====
+
+type SMS struct {
+	From           string         `json:"from"`
+	Message        string         `json:"message"`
+	SMSRecipients  []SMSRecipient `json:"smsRecipients"`
+	SMSSendOptions SMSOptions     `json:"smsSendOptions"`
+}
+
+type SMSRecipient struct {
+	To                     string `json:"to"`
+	RepeatabilityFirstSent string `json:"repeatabilityFirstSent"`
+	RepeatabilityRequestID string `json:"repeatabilityRequestId"`
+}
+
+type SMSOptions struct {
+	EnableDeliveryReport bool   `json:"enableDeliveryReport"`
+	Tag                  string `json:"tag"`
+}
+
+// ==== Response types ====
 
 // ErrorResponse wraps the error response from the API
 type ErrorResponse struct {
@@ -67,10 +88,23 @@ type CommunicationError struct {
 	Message string `json:"message"`
 }
 
-// ==== Status types ====
-
 // SendStatusResult contains the message ID and status of the email
 type SendStatusResult struct {
 	MessageID string `json:"messageId"`
 	Status    string `json:"status"`
+}
+
+// SMSSendResponse contains array of responses for each SMS
+type SMSSendResponse struct {
+	Value []SMSSendResponseItem `json:"value"`
+}
+
+// SmsSendResponseItem contains the response for a single SMS
+type SMSSendResponseItem struct {
+	ErrorMessage        string `json:"errorMessage"`
+	HTTPStatusCode      int    `json:"httpStatusCode"`
+	MessageID           string `json:"messageId"`
+	RepeatabilityResult string `json:"repeatabilityResult"`
+	Successful          bool   `json:"successful"`
+	To                  string `json:"to"`
 }

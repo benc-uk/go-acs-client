@@ -1,10 +1,13 @@
-# Client SDK for the Azure Communication Services Email API
+# Client SDK for the Azure Communication Services API
 
-This is a SDK client library for use with Azure Communication Services email service. It is a an implementation of the [REST API documented here](https://learn.microsoft.com/en-us/rest/api/communication/email/send?tabs=HTTP)
+This is a SDK client library for use with Azure Communication Services, providing support for sending email and SMS.
+It is a an implementation of the REST APIs documented [here](https://learn.microsoft.com/en-us/rest/api/communication/sms/send?tabs=HTTP) & [here](https://learn.microsoft.com/en-us/rest/api/communication/email/send?tabs=HTTP)
 
-It's simple to use, the only pre-req is a Email Communication Service resource [deployed and configured](https://learn.microsoft.com/en-us/azure/communication-services/quickstarts/email/create-email-communication-resource)  in Azure
+It's simple to use, the only pre-req is a Communication Service resource [deployed and configured](https://learn.microsoft.com/en-gb/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp)  in Azure
 
 ## Simple Usage
+
+### Sending Email
 
 Let's send an email to Bob, he'd love to hear from us...
 
@@ -26,7 +29,29 @@ if err != nil {
 // Optional - check or poll the status with client.GetStatus(msgID)
 ```
 
-See the `client_tests.go` file for more detailed examples
+### Sending a SMS
+
+Maybe Bob would like a coffee, let's send him a SMS
+
+```go
+import "github.com/benc-uk/go-acs-email/client"
+
+endpoint := "https://blahblah.communication.azure.com"
+accessKey := os.Getenv("ACS_ACCESS_KEY") // Keep the ACS access key secret
+
+acsClient := client.New(accessKey, endpoint)
+
+sms := client.NewSMS("+18551111111", "+441234567890", "Fancy a coffee?")
+
+smsResp, err := acsClient.SendSingleSMS(sms)
+if err != nil {
+  log.Fatal(err)
+}
+
+// Validate sending by checking the smsResp here
+```
+
+See the `email_test.go` & `sms_test.go` files for more detailed examples
 
 ## Quick Docs
 
@@ -42,7 +67,10 @@ func NewClient(accessKey, endpoint string) *Client
 func (c *Client) SendEmail(e *Email) (messageID string, err error)
 
 // GetStatus gets the status of an email message sent using SendEmail()
-func (c *Client) GetStatus(messageID string) (status string, err error)
+func (c *Client) GetEmailStatus(messageID string) (status string, err error)
+
+// SendSingleSMS sends a single SMS and returns the API response and/or error
+func (c *Client) SendSingleSMS(s *SMS) (smsResp *SMSSendResponseItem, err error)
 ```
 
 ### Type: `Email`
@@ -89,4 +117,18 @@ func (e *Email) DisableUserEngagementTracking()
 
 // EnableUserEngagementTracking enables user engagement tracking
 func (e *Email) EnableUserEngagementTracking()
+```
+
+### Type `SMS`
+
+```go
+type SMS struct {
+	From           string         `json:"from"`
+	Message        string         `json:"message"`
+	SMSRecipients  []SMSRecipient `json:"smsRecipients"`
+	SMSSendOptions SMSOptions     `json:"smsSendOptions"`
+}
+
+// NewSMS creates a new SMS message for sending
+func NewSMS(from, to, msg string) *SMS {
 ```
