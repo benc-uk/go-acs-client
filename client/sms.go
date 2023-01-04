@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/benc-uk/go-acs-email/auth"
+	"github.com/benc-uk/go-acs-client/auth"
 	"github.com/google/uuid"
 )
 

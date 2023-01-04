@@ -1,4 +1,4 @@
-module github.com/benc-uk/go-acs-email
+module github.com/benc-uk/go-acs-client
 
 go 1.19
 

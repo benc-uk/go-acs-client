@@ -12,7 +12,7 @@ It's simple to use, the only pre-req is a Communication Service resource [deploy
 Let's send an email to Bob, he'd love to hear from us...
 
 ```go
-import "github.com/benc-uk/go-acs-email/client"
+import "github.com/benc-uk/go-acs-client/client"
 
 endpoint := "https://blahblah.communication.azure.com"
 accessKey := os.Getenv("ACS_ACCESS_KEY") // Keep the ACS access key secret
@@ -34,7 +34,7 @@ if err != nil {
 Maybe Bob would like a coffee, let's send him a SMS
 
 ```go
-import "github.com/benc-uk/go-acs-email/client"
+import "github.com/benc-uk/go-acs-client/client"
 
 endpoint := "https://blahblah.communication.azure.com"
 accessKey := os.Getenv("ACS_ACCESS_KEY") // Keep the ACS access key secret
